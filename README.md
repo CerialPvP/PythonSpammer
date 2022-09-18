@@ -38,3 +38,13 @@ If you want to spam in Roblox, this is what you should use:
 This will make the program press `/` (the key to open chat) before spamming.
 
 **Currently, the program does not support key combinations (example: Ctrl+T, not a real key to open chat in a game I know of). This may be added in the future though.**
+
+#### --limitedSpam
+
+By default, the program will spam infinitely. You can provide the times the program should spam before it stops.
+
+If you want to spam 100 times, this is what you should use:
+
+`py main.py --limitedSpam:100`
+
+**More arguments will be added in the future.**
