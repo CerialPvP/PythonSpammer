@@ -47,4 +47,26 @@ If you want to spam 100 times, this is what you should use:
 
 `py main.py --limitedSpam:100`
 
+#### --spamSpeed
+
+**NOTE: This setting is absolutely not recommended to change whilst spamming in Discord. The reason for that is that you can easily get rate-limited and that ruins the spam.**
+
+By default, the spam speed will be 0.7 seconds.
+
+If you are spamming in other social media platforms such as WhatsApp, Instagram, Telegram, Facebook there is no limit on how fast you can spam. You can make the spammer go sicko mode and have a delay of 0.01 seconds, this is still not recommended.
+
+If you want to do that, this is what you should use:
+
+`py main.py --spamSpeed:0.01`
+
+#### --noDelay
+
+**NOTE: By enabling this argument, it will be difficult to stop the program. It is recommend this argument will be used together with --limitedSpam.**
+
+After 10 words, the program will stop for 2 seconds, and it will keep repeating until the program is stopped.
+
+As noted above, this should be used with `--limitedSpam`, and we will demonstrate it here.
+
+`py main.py --noDelay --limitedSpam:50`
+
 **More arguments will be added in the future.**
