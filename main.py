@@ -1,4 +1,9 @@
 import os
+from platform import node
+import sys
+from typing import List
+
+args: List[str] = sys.argv
 
 try:
     from colorama import Fore, Style, init
@@ -24,44 +29,104 @@ import random
 lines = file.readlines()
 # Checkers for the input.
 if f"{lines}" == "[]":
-    print(Fore.RED+"You did not input anything in input.txt!\nExample for a spam message:\n"+Fore.CYAN+"Hello! {spam}")
+    print(Fore.RED+"[Error] You did not input anything in input.txt!\nExample for a spam message:\n"+Fore.CYAN+"Hello! {spam}")
     raise SystemExit(1)
 
 # Gives you a warning if there is no spam variable.
 if f"{lines}".find("{spam}") == -1:
     print(Fore.YELLOW+"[Warning] Some software may have a check for similar messages. It is recommended you put the {spam} tag in your desired message.")
 
-print(Fore.GREEN+"[Ready] You have 3 seconds to switch to your desired program you want to spam on.\nTo stop the program at any moment comfortably, press 'S' on your keyboard.")
+# Handles all arguments
+argHandleCount = -1
+for arg in args:
+    argHandleCount += 1
+    if "--pressBeforeSpam" in arg:
+        pressBeforeSpam = arg.split(":")[1]
+        print(Fore.LIGHTBLUE_EX+f"[Argument] Detected \"pressBeforeSpam\" argument. Value: {pressBeforeSpam}")
+    
+    elif "--limitedSpam" in arg:
+        try:
+            limitedSpam = int(arg.split(":")[1])
+            print(Fore.LIGHTBLUE_EX+f"[Argument] Detected \"limitedSpam\" argument. Value: {limitedSpam}")
+        except ValueError:
+            print(Fore.RED+f"[Argument] Argument Error: You can only provide an integer for \"limitedSpam\" argument.")
+            raise SystemExit(1)
+    
+    elif "--spamSpeed" in arg:
+        try:
+            spamSpeed = float(arg.split(":")[1])
+            print(Fore.LIGHTBLUE_EX+f"[Argument] Detected \"spamSpeed\" argument. Value: {spamSpeed}")
+        except ValueError:
+            print(Fore.RED+f"[Argument] Argument Error: You can only provide a number for \"spamSpeed\" argument.")
+            raise SystemExit(1)
+        
+    elif "--noDelay" in arg:
+        noDelay = True
+        print(Fore.LIGHTBLUE_EX+f"[Argument] Detected \"noDelay\" argument.")
+    
+    elif "main.py" in arg:
+        pass
+    
+    else:
+        print(Fore.RED+f"[Argument] Detected unknown argument \"{arg}\". To check the arguments list, go to the GitHub.")
+        raise SystemExit(1)
+
+print(Fore.GREEN+"[Ready] You have 3 seconds to switch to your desired program you want to spam on.")
 sleep(3)
 kb = Controller()
 
-# This is going to be the main spammer function.
-# We will use this in loops.
-def main_spam():
-    # Now, we loop the lines.
+if 'spamSpeed' in vars():
+    print('')
+else:
+    spamSpeed = 0.7
+
+# We will define the function first.
+progBreak = 0
+def loopLine_Func():
     for loopLine in lines:
+        print(Fore.BLUE+"[Spammer] Text sent.")
         # Now, we will add 1 to the break variable, and we will check if it's time to stop.
+        global progBreak
         progBreak += 1
-        if progBreak == 10:
-            print(Fore.CYAN+"[Program Break] It is time for a break.\nIf you need to stop it, press Ctrl+C.\nAfter 2 seconds, the program will keep running.")
-            sleep(2)
-            print(Fore.GREEN+"[Program Break] The break is over. The program will keep running.")
-            progBreak = 0
+        global noDelay
+        if bool('noDelay' in vars()) == False:
+            noDelay = False
+        elif noDelay == True:
+            pass
+        else:
+            if progBreak == 10:
+                print(Fore.CYAN+"[Program Break] It is time for a break.\nIf you need to stop it, press Ctrl+C.\nAfter 2 seconds, the program will keep running.")
+                sleep(2)
+                print(Fore.GREEN+"[Program Break] The break is over. The program will keep running.")
+                progBreak = 0
+        
+        if 'pressBeforeSpam' in vars():
+            kb.press(pressBeforeSpam)
+            kb.release(pressBeforeSpam)
+            print(pressBeforeSpam)
         
         # First, we will make a random text out of ABC, numbers and symbols.
         uppercase = "QWERTYUIOPASDFGHJKLZXCVBNM"
         lowercase = "qwertyuiopasdfghjklzxcvbnm"
         numbers = "0123456789"
-        characters = "!@##$%^&*()_+-=[]{}\|;:'\"?/<>,."
+        characters = "!@#$%^&*()_+-=[]{}\|;:'\"?/<>,."
         
         randomText = "["+(''.join(random.choice(uppercase+lowercase+numbers+characters) for i in range(30)))+"]"
         
         # Now, we will replace the {spam} in the messages.
         loopLine = loopLine.replace("{spam}", f"{randomText}")
-        print(loopLine)
         
         # Now, typing the spam message.
-        kb.type(loopLine+"\n")
-        
-        sleep(0.7)
+        kb.type(loopLine+"\n\n")
+        sleep(spamSpeed)
+
+if 'limitedSpam' in vars():
+    for i in range(limitedSpam):
+        loopLine_Func()
+    
+    print(Fore.GREEN+f"[Finished] Spammed for {limitedSpam} times.")
+    
+else:
+    while True:
+        loopLine_Func()
 
