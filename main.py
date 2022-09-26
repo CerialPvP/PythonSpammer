@@ -1,3 +1,4 @@
+from encodings import utf_8
 import os
 from platform import node
 import sys
@@ -18,7 +19,7 @@ except:
 
 # Read input.txt
 try:
-    file = open('input.txt', 'r')
+    file = open('input.txt', 'r', encoding="UTF-8")
 except FileNotFoundError:
     print(Fore.RED+"[Error] The file 'input.txt' doesn't exist.\nPlease make a file named 'input.txt' in the same directory as this Python script.")
     raise SystemExit(1)
